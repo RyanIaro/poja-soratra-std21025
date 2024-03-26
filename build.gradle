@@ -6,14 +6,17 @@ plugins {
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.3'
 
-    id 'org.openapi.generator' version '5.3.0'
+    id 'org.openapi.generator' version '7.4.0'
 
     id 'jacoco'
+
+    
 }
 
 jacoco {
     toolVersion = "0.8.11"
 }
+
 
 
 repositories {
@@ -22,9 +25,9 @@ repositories {
 }
 
 java {
-    group = 'hei.school.soratra'
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
+    group = 'school.hei.soratra'
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
 }
 
 configurations {
@@ -48,6 +51,13 @@ test {
 
 jacocoTestCoverageVerification {
     dependsOn test
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "**/gen/**"
+            ])
+        }))
+    }
     violationRules {
         rule {
             limit {
@@ -63,6 +73,15 @@ jacocoTestReport {
     reports {
         xml.required = true
         html.required = true
+    }
+    afterEvaluate {
+        // Need to be duplicated like this from jacocoTestCoverageVerification,
+        // else display coverageRate is inconsistent with what was computed during coverage...
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "**/gen/**"
+            ])
+        }))
     }
     doLast {
         def coverageReportFile = file("$buildDir/reports/jacoco/test/jacocoTestReport.xml")

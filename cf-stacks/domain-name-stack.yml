@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: poja-base - Domain name
+Description: poja-soratra-std21025 - Domain name
 
 Parameters:
   DomainName:
